@@ -19,7 +19,7 @@ app.post("/send", async (req, res) => {
 
     try {
         await transporter.sendMail({
-            from: "chatterbase@gmail.com",
+            from: process.env.EMAIL_USER,
             to,
             subject,
             text,
