@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(cors());
 
 app.post("/send", async (req, res) => {
-    const { to, subject, text } = req.body;
+    const { to, subject, html } = req.body;
 
     const transporter = nodemailer.createTransport({
         service: "gmail",
@@ -22,7 +22,7 @@ app.post("/send", async (req, res) => {
             from: process.env.EMAIL_USER,
             to,
             subject,
-            text,
+            html,
         });
 
         res.status(200).send("Email sent!");
