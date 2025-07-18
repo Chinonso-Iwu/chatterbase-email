@@ -1,39 +1,34 @@
-const express = require('express');
-const nodemailer = require('nodemailer');
-const cors = require('cors');
+const express = require("express");
+const nodemailer = require("nodemailer");
+const cors = require("cors");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
-app.post('/send', async (req, res) => {
-    const { name, email, message } = req.body;
+app.post("/send", async (req, res) => {
+    const { to, subject, text } = req.body;
+
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "your-email@gmail.com",
+            pass: "your-app-password",
+        },
+    });
 
     try {
-        let transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'chatterbase@gmail.com',         // Replace with your Gmail
-                pass: 'wzptgyrtwqobrtgs'            // Use app password, not Gmail password
-            }
-        });
-
         await transporter.sendMail({
-            from: `"${name}" <${email}>`,
-            to: 'chatterbase@gmail.com',            // Your Gmail again
-            subject: "New message from your website",
-            text: message
+            from: "your-email@gmail.com",
+            to,
+            subject,
+            text,
         });
 
-        res.status(200).json({ success: true, message: "Email sent!" });
+        res.status(200).send("Email sent!");
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ success: false, message: "Email failed!" });
+        res.status(500).send("Failed to send email");
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+app.listen(3000, () => console.log("Server running"));
