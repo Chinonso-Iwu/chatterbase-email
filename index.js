@@ -8,24 +8,20 @@ app.use(cors());
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-app.post("/send", async (req, res) => {
-    const { to, subject, html } = req.body;
-
+app.get("/test-email", async (req, res) => {
     try {
         const data = await resend.emails.send({
             from: "onboarding@resend.dev",
-            to: to,
-            subject: subject,
-            html: html,
+            to: "chinonso1311@gmail.com", // change this
+            subject: "Test Email from ChatterBase",
+            html: "<h1>Hello 👋</h1><p>If you see this, Resend is working!</p>",
         });
 
-        console.log("Email sent:", data);
-
-        res.status(200).send("Email sent!");
-    } catch (err) {
-        console.log("Error sending email:", err);
-
-        res.status(500).send("Failed to send email");
+        console.log(data);
+        res.send("Email sent successfully!");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Email failed");
     }
 });
 
