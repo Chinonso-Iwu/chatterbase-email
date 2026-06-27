@@ -1,32 +1,30 @@
 const express = require("express");
-const nodemailer = require("nodemailer");
 const cors = require("cors");
+const { Resend } = require("resend");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 app.post("/send", async (req, res) => {
     const { to, subject, html } = req.body;
 
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-    });
-
     try {
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to,
-            subject,
-            html,
+        const data = await resend.emails.send({
+            from: "onboarding@resend.dev",
+            to: to,
+            subject: subject,
+            html: html,
         });
+
+        console.log("Email sent:", data);
 
         res.status(200).send("Email sent!");
     } catch (err) {
+        console.log("Error sending email:", err);
+
         res.status(500).send("Failed to send email");
     }
 });
