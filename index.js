@@ -15,7 +15,7 @@ app.post("/send", async (req, res) => {
 
     try {
         const data = await resend.emails.send({
-            from: "onboarding@resend.dev",
+            from: "ChatterBase <onboarding@resend.dev>",
             to: to,
             subject: subject,
             html: html,
